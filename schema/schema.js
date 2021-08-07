@@ -1,6 +1,14 @@
 const graphql = require('graphql');
 
-const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID } = graphql;
+const {
+    GraphQLObjectType,
+    GraphQLString,
+    GraphQLSchema,
+    GraphQLID,
+    GraphQLList
+} = graphql;
+
+
 const dummy = require('../dummy.json');
 
 const PersonType = new GraphQLObjectType({
@@ -29,7 +37,6 @@ const OneononeDocType = new GraphQLObjectType({
         person: {
             type: PersonType,
             resolve(parent, args) {
-                console.log(parent);
                 return dummy.people.find(el => el.id === parent.personId);
             }
         }
@@ -43,18 +50,19 @@ const RootQuery = new GraphQLObjectType({
             type: PersonType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
-                //code to get data from persistence
-                console.log('RESOLVE');
-                console.log(parent);
-                console.log(args);
                 return dummy.people.find(el => el.id === args.id);
+            }
+        },
+        people: {
+            type: new GraphQLList(PersonType),
+            resolve(parent, args) {
+                return dummy.people;
             }
         },
         ooodoc: {
             type: OneononeDocType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
-                console.log(dummy);
                 return dummy.oneononedocs.find(el => el.id === args.id);
             }
         }
