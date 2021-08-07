@@ -10,9 +10,6 @@ const {
     GraphQLList
 } = graphql;
 
-
-//const dummy = require('../dummy.json');
-
 const PersonType = new GraphQLObjectType({
     name: 'Person',
     fields: () => ({
@@ -34,22 +31,15 @@ const PersonType = new GraphQLObjectType({
     })
 });
 
-/*
-const OneononeDocType = new GraphQLObjectType({
-    name: 'Oneononedoc',
+const ResourceType = new GraphQLObjectType({
+    name: 'Resource',
     fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
-        link: { type: GraphQLString },
-        person: {
-            type: PersonType,
-            resolve(parent, args) {
-                return dummy.people.find(el => el.id === parent.personId);
-            }
-        }
+        link: { type: GraphQLString }
     })
 });
-*/
+
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
@@ -57,24 +47,22 @@ const RootQuery = new GraphQLObjectType({
             type: PersonType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
-                return dummy.people.find(el => el.id === args.id);
+//                return dummy.people.find(el => el.id === args.id);
             }
         },
         people: {
             type: new GraphQLList(PersonType),
             resolve(parent, args) {
-                return dummy.people;
+//                return dummy.people;
             }
-        }
-/*,
-        ooodoc: {
-            type: OneononeDocType,
+        },
+        resource: {
+            type: ResourceType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
-                return dummy.oneononedocs.find(el => el.id === args.id);
+                //return dummy.oneononedocs.find(el => el.id === args.id);
             }
         }
-*/
     }
 });
 
@@ -101,6 +89,20 @@ const Mutation = new GraphQLObjectType({
                     team: args.team 
                 });
                 return person.save();
+            }
+        },
+        addResource: {
+            type: ResourceType,
+            args: {
+                name: { type: GraphQLString },
+                link: { type: GraphQLString }
+            },
+            resolve(parent, args) {
+                let resource = new Resource({
+                    name: args.name,
+                    link: args.link
+                });
+                return resource.save();
             }
         }
     }
