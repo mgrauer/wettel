@@ -7,7 +7,8 @@ const personSchema = new Schema({
     name: String,
     level: String,
     role: String,
-    team: String
+    team: String,
+    ooodocId: String
 });
 
 module.exports = mongoose.model('Person', personSchema);
